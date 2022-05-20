@@ -8,6 +8,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.databinding.DataBindingUtil
+import com.konling.study.aboutme.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,14 +17,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var nicknametext: TextView
 
+    private lateinit var binding: ActivityMainBinding
+
+    private val myName: MyName = MyName("Maughan")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        doneButton = findViewById(R.id.done_button)
-        editText = findViewById(R.id.nickname_edit)
-        nicknametext = findViewById(R.id.nickname_text)
-        doneButton.setOnClickListener { addNickname() }
-        nicknametext.setOnClickListener { updateNickName() }
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+
+        binding.myName = myName
+        doneButton = binding.doneButton
+        editText = binding.nicknameEdit
+        nicknametext = binding.nicknameText
+        binding.apply {
+            myName?.nickname = nicknametext.text.toString()
+            invalidateAll()
+
+            binding.doneButton.setOnClickListener { addNickname() }
+            binding.nicknameText.setOnClickListener { updateNickName() }
+        }
     }
 
     private fun addNickname() {
